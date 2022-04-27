@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geostrophic Approximation Visualization</title>
+</head>
+<body>
+  <header>This page visualizes the Geostrophic Approximation in atmospheric dynamics</header>
+  <section>
+    <article>
+      <p>The Geostrophic Approximation is where we get the explanation that "wind flows parallel to isobars" on a surface prognostic chart.</p>        
+      <p>This visualization is based on the explanation and derivation from <a href="https://cpb-us-w2.wpmucdn.com/sites.uwm.edu/dist/8/663/files/2019/05/Oct2.pdf">Synoptic Meteorology I: The Geostrophic Approximation</a>.
+    </article>
+  </section>
+  <section>
+    <noscript>You'll need JavaScript enabled to see the visualization move.</noscript>
+    <svg xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 100 500" fill="transparent"
+      width="95vw" height="70vh"
+    >
+      <defs>
+        <style>@import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&amp;family=Source+Code+Pro&amp;family=Source+Sans+Pro&amp;family=Crimson+Pro&amp;display=block');</style>
+      </defs>
+      <g id="pressure_gradient" transform="translate(0, 16) ">
+        <g>
+          <g id="pressure_pointer" pointer-events="none" opacity="1">
+              <path
+                d="M0,100 L0,0"
+                fill="#1d1d1d" stroke="#1d1d1d" stroke-width="4" stroke-dasharray="none" stroke-dashoffset="none"
+                stroke-linecap="round" stroke-linejoin="round" pointer-events="stroke" />
+              <path d="M-10,20 L0,0 L10,20" fill="none" stroke="#1d1d1d"
+                stroke-width="4" stroke-linecap="round" stroke-linejoin="round" pointer-events="none" />
+            </g>
+            <g font-size="12" font-family="Caveat Brush" text-align="left" fill="#1d1d1d" transform-origin="top left"
+              transform="translate(10, 0)">
+              <text y="0">Pressure Gradient</text>
+            </g>
+          </g>
+        </g>
+      </svg>
+    <script lang="javascript">
+      let x = 0;
+      let y = 16;
+
+      setInterval(() => {
+        y -= 1;
+        if (y < 16) {
+          y = 200;
+        }
+        pressure = document.getElementById("pressure_pointer");
+        pressure.setAttribute('transform', `translate(${x}, ${y})`);
+        console.log('Moving to', x, y);
+      }, 16.67); // 60 frames per second
+    </script>
+  </section>
+</body>
+</html>
