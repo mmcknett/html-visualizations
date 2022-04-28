@@ -16,6 +16,7 @@
   </section>
   <section>
     <button type="button" id="startstop">Start</button>
+    <button type="button" id="reset_button">Reset</button>
   </section>
   <section>
     <noscript>You'll need JavaScript enabled to see the visualization move.</noscript>
@@ -33,8 +34,8 @@
         <path d="M-100,100 L100,100" stroke="#881d88" stroke-width="1"/>
         <path d="M-100,133 L100,133" stroke="#1d1def" stroke-width="1"/>
       </g>
-      <g id="pressure_gradient" transform="translate(0, 120) ">
-        <g>
+      <g id="freebody_system" transform="translate(0, 120)">
+        <g id="pressure_gradient">
           <g id="pressure_pointer" pointer-events="none" opacity="1">
             <path
               d="M0,10 L0,0"
@@ -52,6 +53,7 @@
     </svg>
     <!-- Simulation Code here -->
     <script lang="javascript">
+      // Simulation management
       let simIntervalId = null;
       let isRunning = () => simIntervalId != null;
 
@@ -59,12 +61,31 @@
       startstopbutton.addEventListener('click', (ev) => {
         if (isRunning()) {
           stop();
-          startstopbutton.innerText = "Start";
         } else {
           start();
-          startstopbutton.innerText = "Stop";
         }
       });
+
+      const resetbutton = document.getElementById("reset_button");
+      resetbutton.addEventListener('click', (ev) => {
+        stop();
+        reset();
+      })
+
+      function start() {
+        simIntervalId = setInterval(() => {
+          simStep(1);
+        }, 16.67); // 60 frames per second
+        startstopbutton.innerText = "Stop";
+      }
+
+      function stop() {
+        clearInterval(simIntervalId);
+        simIntervalId = null;
+        startstopbutton.innerText = "Start";
+      }
+
+      // Simulation logic
 
       const INITIAL_Y = 120;
       let x = 0;
@@ -72,15 +93,12 @@
       let v_x = 0;
       let v_y = 0;
 
-      function start() {
-        simIntervalId = setInterval(() => {
-          simStep(1);
-        }, 16.67); // 60 frames per second
-      }
-
-      function stop() {
-        clearInterval(simIntervalId);
-        simIntervalId = null;
+      function reset() {
+        x = 0;
+        y = INITIAL_Y;
+        v_x = 0;
+        v_y = 0;
+        renderSystem();
       }
 
       function simStep(timestep) {
@@ -88,8 +106,12 @@
         if (y < 10) {
           y = INITIAL_Y;
         }
-        pressure = document.getElementById("pressure_gradient");
-        pressure.setAttribute('transform', `translate(${x}, ${y})`);
+        renderSystem();
+      }
+
+      function renderSystem() {
+        let system = document.getElementById("freebody_system");
+        system.setAttribute('transform', `translate(${x}, ${y})`);
         console.log('Moving to', x, y);
       }
     </script>
