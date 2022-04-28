@@ -19,30 +19,37 @@
   </section>
   <section>
     <noscript>You'll need JavaScript enabled to see the visualization move.</noscript>
+    <!-- Diagram starts here -->
     <svg xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 100 500" fill="transparent"
+      viewBox="-100 0 200 150" fill="transparent"
       width="95vw" height="70vh"
     >
       <defs>
         <style>@import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&amp;family=Source+Code+Pro&amp;family=Source+Sans+Pro&amp;family=Crimson+Pro&amp;display=block');</style>
       </defs>
-      <g id="pressure_gradient" transform="translate(0, 16) ">
+      <g>
+        <path d="M-100,33 L100,33" stroke="#ef1d1d" stroke-width="1"/>
+        <path d="M-100,67 L100,67" stroke="#dc1d4e" stroke-width="1"/>
+        <path d="M-100,100 L100,100" stroke="#881d88" stroke-width="1"/>
+        <path d="M-100,133 L100,133" stroke="#1d1def" stroke-width="1"/>
+      </g>
+      <g id="pressure_gradient" transform="translate(0, 120) ">
         <g>
           <g id="pressure_pointer" pointer-events="none" opacity="1">
-              <path
-                d="M0,100 L0,0"
-                fill="#1d1d1d" stroke="#1d1d1d" stroke-width="4" stroke-dasharray="none" stroke-dashoffset="none"
-                stroke-linecap="round" stroke-linejoin="round" pointer-events="stroke" />
-              <path d="M-10,20 L0,0 L10,20" fill="none" stroke="#1d1d1d"
-                stroke-width="4" stroke-linecap="round" stroke-linejoin="round" pointer-events="none" />
-            </g>
-            <g font-size="12" font-family="Caveat Brush" text-align="left" fill="#1d1d1d" transform-origin="top left"
-              transform="translate(10, 0)">
-              <text y="0">Pressure Gradient</text>
-            </g>
+            <path
+              d="M0,10 L0,0"
+              fill="#1d1d1d" stroke="#1d1d1d" stroke-width="1" stroke-dasharray="none" stroke-dashoffset="none"
+              stroke-linecap="round" stroke-linejoin="round" pointer-events="stroke" />
+            <path d="M-1,2 L0,0 L1,2" fill="none" stroke="#1d1d1d"
+              stroke-width="1" stroke-linecap="round" stroke-linejoin="round" pointer-events="none" />
+          </g>
+          <g font-size="5" font-family="Caveat Brush" text-align="left" fill="#1d1d1d" transform-origin="top left"
+            transform="translate(2, 0)">
+            <text y="0">Pressure Gradient</text>
           </g>
         </g>
-      </svg>
+      </g>
+    </svg>
     <!-- Simulation Code here -->
     <script lang="javascript">
       let simIntervalId = null;
@@ -64,14 +71,14 @@
 
       function start() {
         simIntervalId = setInterval(() => {
-        y -= 1;
-        if (y < 16) {
-          y = 200;
-        }
-        pressure = document.getElementById("pressure_pointer");
-        pressure.setAttribute('transform', `translate(${x}, ${y})`);
-        console.log('Moving to', x, y);
-      }, 16.67); // 60 frames per second
+          y -= 1;
+          if (y < 16) {
+            y = 200;
+          }
+          pressure = document.getElementById("pressure_pointer");
+          pressure.setAttribute('transform', `translate(${x}, ${y})`);
+          console.log('Moving to', x, y);
+        }, 16.67); // 60 frames per second
       }
 
       function stop() {
