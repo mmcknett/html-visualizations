@@ -15,6 +15,9 @@
     </article>
   </section>
   <section>
+    <button type="button" id="startstop">Start</button>
+  </section>
+  <section>
     <noscript>You'll need JavaScript enabled to see the visualization move.</noscript>
     <svg xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 100 500" fill="transparent"
@@ -40,11 +43,27 @@
           </g>
         </g>
       </svg>
+    <!-- Simulation Code here -->
     <script lang="javascript">
+      let simIntervalId = null;
+      let isRunning = () => simIntervalId != null;
+
+      const startstopbutton = document.getElementById("startstop");
+      startstopbutton.addEventListener('click', (ev) => {
+        if (isRunning()) {
+          stop();
+          startstopbutton.innerText = "Start";
+        } else {
+          start();
+          startstopbutton.innerText = "Stop";
+        }
+      });
+
       let x = 0;
       let y = 16;
 
-      setInterval(() => {
+      function start() {
+        simIntervalId = setInterval(() => {
         y -= 1;
         if (y < 16) {
           y = 200;
@@ -53,6 +72,12 @@
         pressure.setAttribute('transform', `translate(${x}, ${y})`);
         console.log('Moving to', x, y);
       }, 16.67); // 60 frames per second
+      }
+
+      function stop() {
+        clearInterval(simIntervalId);
+        simIntervalId = null;
+      }
     </script>
   </section>
 </body>
