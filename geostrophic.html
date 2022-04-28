@@ -66,24 +66,31 @@
         }
       });
 
+      const INITIAL_Y = 120;
       let x = 0;
-      let y = 16;
+      let y = INITIAL_Y;
+      let v_x = 0;
+      let v_y = 0;
 
       function start() {
         simIntervalId = setInterval(() => {
-          y -= 1;
-          if (y < 16) {
-            y = 200;
-          }
-          pressure = document.getElementById("pressure_pointer");
-          pressure.setAttribute('transform', `translate(${x}, ${y})`);
-          console.log('Moving to', x, y);
+          simStep(1);
         }, 16.67); // 60 frames per second
       }
 
       function stop() {
         clearInterval(simIntervalId);
         simIntervalId = null;
+      }
+
+      function simStep(timestep) {
+        y -= timestep;
+        if (y < 10) {
+          y = INITIAL_Y;
+        }
+        pressure = document.getElementById("pressure_gradient");
+        pressure.setAttribute('transform', `translate(${x}, ${y})`);
+        console.log('Moving to', x, y);
       }
     </script>
   </section>
