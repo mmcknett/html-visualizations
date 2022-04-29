@@ -54,6 +54,22 @@
             <text>Pressure Gradient</text>
           </g>
         </g>
+        <g id="coriolis_force">
+          <g id="coriolis_pointer" transform="scale(0)">
+            <path
+              d="M0,10 L0,0"
+              stroke="red"
+              stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M-1,2 L0,0 L1,2"
+              stroke="red"
+              stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+          </g>
+          <g font-size="5" font-family="Caveat Brush" text-align="left" fill="red" transform-origin="top left"
+            transform="translate(2, 0)">
+            <text>Coriolis Force</text>
+          </g>
+        </g>
         <g id="velocity_vector">
           <g id="velocity_pointer" transform="scale(0)">
             <path
@@ -152,14 +168,22 @@
       }
 
       function renderSystem() {
-        let system = document.getElementById("freebody_system");
+        const system = document.getElementById("freebody_system");
         system.setAttribute('transform', `translate(${x}, ${y})`);
         console.log('Moving to', x, y);
 
-        const v_angle = Math.atan2(v_y, v_x) * 180 / Math.PI;
-        const v_mag = Math.hypot(v_x, v_y);
-        let vel_vector = document.getElementById("velocity_pointer");
-        vel_vector.setAttribute('transform', `scale(${v_mag}) rotate(${v_angle})`);
+        const vel_vector = document.getElementById("velocity_pointer");
+        vel_vector.setAttribute('transform', vector_style(v_x, v_y));
+
+        const coriolis_vector = document.getElementById("coriolis_pointer");
+        const [cf_x, cf_y] = coriolis().map(s => s * 50);
+        coriolis_vector.setAttribute('transform', vector_style(cf_x, cf_y));
+      }
+
+      function vector_style(x, y) {
+        const angle = Math.atan2(y, x) * 180 / Math.PI;
+        const mag = Math.hypot(x, y);
+        return `scale(${mag}) rotate(${angle})`
       }
 
       // Coriolis force is proportional to velocity and acts ninety degrees to the right.
