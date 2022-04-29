@@ -35,18 +35,39 @@
         <path d="M-100,133 L100,133" stroke="#1d1def" stroke-width="1"/>
       </g>
       <g id="freebody_system" transform="translate(0, 120)">
-        <g id="pressure_gradient">
-          <g id="pressure_pointer" pointer-events="none" opacity="1">
+        <g id="parcel">
+          <rect x="-1" y="-1" width="2" height="2" fill="blue" stroke="#9999FF" stroke-width="0.25" />
+        </g>
+        <g id="pressure_gradient" transform="translate(0, -12)">
+          <g id="pressure_pointer">
             <path
               d="M0,10 L0,0"
-              fill="#1d1d1d" stroke="#1d1d1d" stroke-width="1" stroke-dasharray="none" stroke-dashoffset="none"
-              stroke-linecap="round" stroke-linejoin="round" pointer-events="stroke" />
-            <path d="M-1,2 L0,0 L1,2" fill="none" stroke="#1d1d1d"
-              stroke-width="1" stroke-linecap="round" stroke-linejoin="round" pointer-events="none" />
+              fill="#1d1d1d" stroke="#1d1d1d"
+              stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M-1,2 L0,0 L1,2"
+              fill="none" stroke="#1d1d1d"
+              stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
           </g>
           <g font-size="5" font-family="Caveat Brush" text-align="left" fill="#1d1d1d" transform-origin="top left"
             transform="translate(2, 0)">
-            <text y="0">Pressure Gradient</text>
+            <text>Pressure Gradient</text>
+          </g>
+        </g>
+        <g id="velocity_vector">
+          <g id="velocity_pointer" transform="scale(0)">
+            <path
+              d="M0,0 L0,-10"
+              stroke="#2222EE"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path
+              d="M-1,-8 L0,-10 L1,-8"
+              stroke="#2222EE"
+              stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
+          </g>
+          <g font-size="3" font-family="Caveat Brush" text-align="left" fill="#1d1d88" transform-origin="top left"
+            transform="translate(2, -5)">
+            <text>Velocity</text>
           </g>
         </g>
       </g>
@@ -93,6 +114,8 @@
       let v_x = 0;
       let v_y = 0;
 
+      const PRESSURE_GRADIENT = -0.01;
+
       function reset() {
         x = 0;
         y = INITIAL_Y;
@@ -102,7 +125,12 @@
       }
 
       function simStep(timestep) {
-        y -= timestep;
+        dvy = PRESSURE_GRADIENT * timestep;
+        v_y += dvy;
+        
+        dy = v_y * timestep;
+        y += dy;
+
         if (y < 10) {
           y = INITIAL_Y;
         }
@@ -113,6 +141,9 @@
         let system = document.getElementById("freebody_system");
         system.setAttribute('transform', `translate(${x}, ${y})`);
         console.log('Moving to', x, y);
+
+        let vel_vector = document.getElementById("velocity_pointer");
+        vel_vector.setAttribute('transform', `scale(${-v_y})`);
       }
     </script>
   </section>
