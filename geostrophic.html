@@ -34,7 +34,7 @@
         <path d="M-100,100 L100,100" stroke="#881d88" stroke-width="1"/>
         <path d="M-100,133 L100,133" stroke="#1d1def" stroke-width="1"/>
       </g>
-      <g id="freebody_system" transform="translate(0, 140)">
+      <g id="freebody_system" transform="translate(0, 70)">
         <g id="parcel">
           <rect x="-1" y="-1" width="2" height="2" fill="blue" stroke="#9999FF" stroke-width="0.25" />
         </g>
@@ -124,24 +124,26 @@
 
       // Simulation logic
 
-      const INITIAL_Y = 140;
+      const INITIAL_Y = 90;
       let x = 0;
       let y = INITIAL_Y;
-      let v_x = 0;
+      let v_x = 2.78;
       let v_y = 0;
 
-      const PRESSURE_GRADIENT = -0.002;
+      const PRESSURE_GRADIENT = -0.02;
 
       function reset() {
         x = 0;
         y = INITIAL_Y;
-        v_x = 0;
+        v_x = 2.78;
         v_y = 0;
         renderSystem();
       }
 
       function simStep(timestep) {
         const [coriolis_force_x, coriolis_force_y] = coriolis();
+
+        // Maybe add friction to eliminate the incidentally added force?
 
         const dvy = (PRESSURE_GRADIENT + coriolis_force_y) * timestep;
         const dvx = coriolis_force_x * timestep;
@@ -155,8 +157,8 @@
         x += dx;
 
         if (y < 10) {
-          y = INITIAL_Y;
-        } else if (y > INITIAL_Y) {
+          y = 140;
+        } else if (y > 140) {
           y = 10
         }
 
@@ -173,13 +175,13 @@
         console.log('Moving to', x, y);
 
         const press_vector = document.getElementById("pressure_gradient");
-        press_vector.setAttribute('transform', vector_style(0, PRESSURE_GRADIENT * 500));
+        press_vector.setAttribute('transform', vector_style(0, PRESSURE_GRADIENT * 50));
 
         const vel_vector = document.getElementById("velocity_vector");
         vel_vector.setAttribute('transform', vector_style(v_x, v_y));
 
         const coriolis_vector = document.getElementById("coriolis_vector");
-        const [cf_x, cf_y] = coriolis().map(s => s * 500);
+        const [cf_x, cf_y] = coriolis().map(s => s * 50);
         coriolis_vector.setAttribute('transform', vector_style(cf_x, cf_y));
       }
 
@@ -191,8 +193,10 @@
 
       // Coriolis force is proportional to velocity and acts ninety degrees to the right.
       function coriolis() {
-        return [-v_y, v_x].map(s => s * .0007);
+        return [-v_y, v_x].map(s => s * .007);
       }
+
+      renderSystem();
     </script>
   </section>
 </body>
