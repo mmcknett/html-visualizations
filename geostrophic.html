@@ -34,7 +34,7 @@
         <path d="M-100,100 L100,100" stroke="#881d88" stroke-width="1"/>
         <path d="M-100,133 L100,133" stroke="#1d1def" stroke-width="1"/>
       </g>
-      <g id="freebody_system" transform="translate(0, 120)">
+      <g id="freebody_system" transform="translate(0, 140)">
         <g id="parcel">
           <rect x="-1" y="-1" width="2" height="2" fill="blue" stroke="#9999FF" stroke-width="0.25" />
         </g>
@@ -57,11 +57,11 @@
         <g id="velocity_vector">
           <g id="velocity_pointer" transform="scale(0)">
             <path
-              d="M0,0 L0,-10"
+              d="M0,0 L10,0"
               stroke="#2222EE"
               stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
             <path
-              d="M-1,-8 L0,-10 L1,-8"
+              d="M8,1 L10,0 L8,-1"
               stroke="#2222EE"
               stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" />
           </g>
@@ -108,7 +108,7 @@
 
       // Simulation logic
 
-      const INITIAL_Y = 120;
+      const INITIAL_Y = 140;
       let x = 0;
       let y = INITIAL_Y;
       let v_x = 0;
@@ -125,15 +125,29 @@
       }
 
       function simStep(timestep) {
-        dvy = PRESSURE_GRADIENT * timestep;
+        const [coriolis_force_x, coriolis_force_y] = coriolis();
+
+        const dvy = (PRESSURE_GRADIENT + coriolis_force_y) * timestep;
+        const dvx = coriolis_force_x * timestep;
+
         v_y += dvy;
-        
-        dy = v_y * timestep;
+        v_x += dvx;
+
+        const dy = v_y * timestep;
+        const dx = v_x * timestep;
         y += dy;
+        x += dx;
 
         if (y < 10) {
           y = INITIAL_Y;
+        } else if (y > INITIAL_Y) {
+          y = 10
         }
+
+        if (x > 100) {
+          x = -100;
+        }
+
         renderSystem();
       }
 
@@ -142,8 +156,15 @@
         system.setAttribute('transform', `translate(${x}, ${y})`);
         console.log('Moving to', x, y);
 
+        const v_angle = Math.atan2(v_y, v_x) * 180 / Math.PI;
+        const v_mag = Math.hypot(v_x, v_y);
         let vel_vector = document.getElementById("velocity_pointer");
-        vel_vector.setAttribute('transform', `scale(${-v_y})`);
+        vel_vector.setAttribute('transform', `scale(${v_mag}) rotate(${v_angle})`);
+      }
+
+      // Coriolis force is proportional to velocity and acts ninety degrees to the right.
+      function coriolis() {
+        return [-v_y, v_x].map(s => s * .02);
       }
     </script>
   </section>
