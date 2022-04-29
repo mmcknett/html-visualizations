@@ -38,40 +38,40 @@
         <g id="parcel">
           <rect x="-1" y="-1" width="2" height="2" fill="blue" stroke="#9999FF" stroke-width="0.25" />
         </g>
-        <g id="pressure_gradient" transform="translate(0, -12)">
+        <g id="pressure_gradient" transform="rotate(-90)">
           <g id="pressure_pointer">
             <path
-              d="M0,10 L0,0"
+              d="M0,0 L10,0"
               fill="#1d1d1d" stroke="#1d1d1d"
               stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
             <path
-              d="M-1,2 L0,0 L1,2"
+              d="M8,1 L10,0 L8,-1"
               fill="none" stroke="#1d1d1d"
               stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
           </g>
           <g font-size="5" font-family="Caveat Brush" text-align="left" fill="#1d1d1d" transform-origin="top left"
-            transform="translate(2, 0)">
+            transform="translate(2, -2)">
             <text>Pressure Gradient</text>
           </g>
         </g>
-        <g id="coriolis_force">
-          <g id="coriolis_pointer" transform="scale(0)">
+        <g id="coriolis_vector" transform="scale(0)">
+          <g id="coriolis_pointer">
             <path
-              d="M0,10 L0,0"
+              d="M0,0 L10,0"
               stroke="red"
               stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
             <path
-              d="M-1,2 L0,0 L1,2"
+              d="M8,1 L10,0 L8,-1"
               stroke="red"
               stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
           </g>
           <g font-size="5" font-family="Caveat Brush" text-align="left" fill="red" transform-origin="top left"
-            transform="translate(2, 0)">
+            transform="translate(2, -2)">
             <text>Coriolis Force</text>
           </g>
         </g>
-        <g id="velocity_vector">
-          <g id="velocity_pointer" transform="scale(0)">
+        <g id="velocity_vector" transform="scale(0)">
+          <g id="velocity_pointer">
             <path
               d="M0,0 L10,0"
               stroke="#2222EE"
@@ -130,7 +130,7 @@
       let v_x = 0;
       let v_y = 0;
 
-      const PRESSURE_GRADIENT = -0.01;
+      const PRESSURE_GRADIENT = -0.002;
 
       function reset() {
         x = 0;
@@ -172,11 +172,14 @@
         system.setAttribute('transform', `translate(${x}, ${y})`);
         console.log('Moving to', x, y);
 
-        const vel_vector = document.getElementById("velocity_pointer");
+        const press_vector = document.getElementById("pressure_gradient");
+        press_vector.setAttribute('transform', vector_style(0, PRESSURE_GRADIENT * 500));
+
+        const vel_vector = document.getElementById("velocity_vector");
         vel_vector.setAttribute('transform', vector_style(v_x, v_y));
 
-        const coriolis_vector = document.getElementById("coriolis_pointer");
-        const [cf_x, cf_y] = coriolis().map(s => s * 50);
+        const coriolis_vector = document.getElementById("coriolis_vector");
+        const [cf_x, cf_y] = coriolis().map(s => s * 500);
         coriolis_vector.setAttribute('transform', vector_style(cf_x, cf_y));
       }
 
@@ -188,7 +191,7 @@
 
       // Coriolis force is proportional to velocity and acts ninety degrees to the right.
       function coriolis() {
-        return [-v_y, v_x].map(s => s * .02);
+        return [-v_y, v_x].map(s => s * .0007);
       }
     </script>
   </section>
