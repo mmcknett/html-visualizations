@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CORS tester</title>
+</head>
+<body>
+  The response is: <span id="response">[not yet called]</span>
+  <script lang="javascript">
+    const response = document.querySelector("#response");
+
+    const queryTrefle = async () => {
+      const token = "replace this string with a token generated from trefle.io/api/auth/claim";
+      const fetch_result = await fetch(`https://trefle.io/api/v1/plants?token=${token}`);
+      const data = await fetch_result.json();
+
+      response.textContent = data.meta.total + " results";
+    };
+    queryTrefle();
+  </script>
+</body>
+</html>
